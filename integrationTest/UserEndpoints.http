@@ -6,6 +6,10 @@ Content-Type: application/json
 GET http://localhost:8080/user
 Content-Type: application/json
 
+### Delete a User by Id
+DELETE http://localhost:8080/user/1
+Content-Type: application/json
+
 ### Create a new User
 POST http://localhost:8080/user
 Content-Type: application/json

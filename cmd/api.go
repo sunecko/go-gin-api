@@ -25,6 +25,7 @@ func main() {
 
 	router.POST("/user", handlers.CreateUser)
 	router.PUT("/user/:id", handlers.UpdateUser)
+	router.DELETE("/user/:id", handlers.DeleteUser)
 	router.GET("/user/:id", handlers.GetUser)
 	router.GET("/user", handlers.GetAllUsers)
 

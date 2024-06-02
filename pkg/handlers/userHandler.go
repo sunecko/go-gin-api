@@ -122,3 +122,19 @@ func GetAllUsers(c *gin.Context) {
 
 	c.JSON(200, response)
 }
+
+func DeleteUser(c *gin.Context) {
+	id := c.Param("id")
+	user := models.User{}
+
+	result := initializers.DB.Delete(&user, id)
+
+	if result.Error != nil {
+		c.JSON(404, wrappers.ResponseError{
+			Title:  "Error deleting user",
+			Detail: "User not found"})
+		return
+	}
+
+	c.JSON(204, "User deleted successfully")
+}
