@@ -15,7 +15,11 @@ func init() {
 
 func main() {
 	//Initialize the router
-	router := gin.Default()
+	router := gin.New()
+
+	//Use the logger and recovery middleware
+	router.Use(gin.Logger())
+	router.Use(gin.Recovery())
 
 	//Migrate the User model
 	migrationErr := initializers.DB.AutoMigrate(&models.User{})
@@ -23,14 +27,18 @@ func main() {
 		log.Fatal(migrationErr)
 	}
 
-	//User routes
-	router.DELETE("/user/:id", handlers.DeleteUser)
-	router.GET("/user/:id", handlers.GetUser)
-	router.GET("/user", handlers.GetAllUsers)
+	needAuth := router.Group("/")
 
 	//Auth routes
 	router.POST("/auth/register", handlers.RegisterUser)
 	router.POST("/auth/login", handlers.Login)
+
+	needAuth.Use(AuthMiddleware())
+	{
+		router.DELETE("/user/:id", handlers.DeleteUser)
+		router.GET("/user/:id", handlers.GetUser)
+		router.GET("/user", AuthMiddleware(), handlers.GetAllUsers)
+	}
 
 	err := router.Run()
 	if err != nil {
