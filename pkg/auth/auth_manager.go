@@ -5,7 +5,7 @@ import (
 	"Dota2Api/pkg/models"
 	"crypto/sha256"
 	"encoding/hex"
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v5"
 	"os"
 	"time"
 )
@@ -41,30 +41,28 @@ func EncryptPassword(password string) string {
 	return encryptedPasswordStr
 }
 
-func VerifyPassword(email string, password string) (bool, error) {
+func VerifyPassword(email string, password string) (uint, error) {
 	user, err := FindUserByEmail(email)
 	if err != nil {
-		return false, err
+		return 0, err
 	}
 
 	if user.Password == EncryptPassword(password) {
-		return true, nil
+		return user.ID, nil
 	}
 
-	return false, nil
+	return 0, nil
 }
 
-func CreateToken(email string) (TokenResponse, error) {
-	expirationTime := time.Now().Add(1440 * time.Minute * 30)
+func CreateToken(email string, userId uint) (TokenResponse, error) {
+	expirationTime := time.Now().Add(1440 * time.Minute * 30).Unix()
 
-	claims := Claims{
-		Email: email,
-		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
-		},
-	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"userId": userId,
+		"email":  email,
+		"exp":    expirationTime,
+	})
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(jwtKey))
 	if err != nil {
 		return TokenResponse{}, err
@@ -72,6 +70,6 @@ func CreateToken(email string) (TokenResponse, error) {
 
 	return TokenResponse{
 		Token:     tokenString,
-		ExpiresAt: expirationTime.Unix(),
+		ExpiresAt: expirationTime,
 	}, nil
 }

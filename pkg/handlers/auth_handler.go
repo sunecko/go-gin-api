@@ -62,13 +62,13 @@ func Login(c *gin.Context) {
 	}
 
 	passwordValidation, _ := auth.VerifyPassword(req.Email, req.Password)
-	if passwordValidation == false {
+	if passwordValidation == 0 {
 		c.JSON(400, wrappers.ResponseError{
 			Title:  "Credentials errors",
 			Detail: "Incorrect email or password"})
 	}
 
-	response, err := auth.CreateToken(req.Email)
+	response, err := auth.CreateToken(req.Email, passwordValidation)
 	if err != nil {
 		c.JSON(400, wrappers.ResponseError{
 			Title:  "Error creating token",

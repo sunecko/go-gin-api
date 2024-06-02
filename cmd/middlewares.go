@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 	"os"
 	"strings"
 )
@@ -22,11 +22,11 @@ func AuthMiddleware() gin.HandlerFunc {
 		token := strings.TrimPrefix(authHeader, bearerPrefix)
 
 		// Check if token is valid
-		validation, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		_, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 			return key, nil
 		})
 
-		if validation.Valid == false && err != nil {
+		if err != nil {
 			c.JSON(401, gin.H{"error": "Invalid token"})
 			c.Abort()
 			return

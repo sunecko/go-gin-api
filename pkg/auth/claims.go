@@ -1,10 +1,13 @@
 package auth
 
-import "github.com/dgrijalva/jwt-go"
+import (
+	"github.com/golang-jwt/jwt/v5"
+)
 
 type Claims struct {
-	Email              string `json:"email"`
-	jwt.StandardClaims `json:"standardClaims"`
+	UserId     uint   `json:"userId"`
+	Email      string `json:"email"`
+	jwt.Claims `json:"claims"`
 }
 
 type TokenResponse struct {
