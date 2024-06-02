@@ -1,0 +1,17 @@
+### Get a User by Id
+GET http://localhost:8080/user/1
+Content-Type: application/json
+
+### Get all Users
+GET http://localhost:8080/user
+Content-Type: application/json
+
+### Create a new User
+POST http://localhost:8080/user
+Content-Type: application/json
+
+{
+  "name": "Sunecko",
+  "email": "sunecko@gamil.com",
+  "phone_number": "56245925"
+}
