@@ -23,11 +23,14 @@ func main() {
 		log.Fatal(migrationErr)
 	}
 
-	router.POST("/user", handlers.CreateUser)
-	router.PUT("/user/:id", handlers.UpdateUser)
+	//User routes
 	router.DELETE("/user/:id", handlers.DeleteUser)
 	router.GET("/user/:id", handlers.GetUser)
 	router.GET("/user", handlers.GetAllUsers)
+
+	//Auth routes
+	router.POST("/auth/register", handlers.RegisterUser)
+	router.POST("/auth/login", handlers.Login)
 
 	err := router.Run()
 	if err != nil {
