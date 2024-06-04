@@ -37,7 +37,7 @@ func main() {
 	{
 		router.DELETE("/user/:id", handlers.DeleteUser)
 		router.GET("/user/:id", handlers.GetUser)
-		router.GET("/user", AuthMiddleware(), handlers.GetAllUsers)
+		router.GET("/user", handlers.GetAllUsers)
 	}
 
 	err := router.Run()
